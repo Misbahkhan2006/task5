@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <style>
+    body { font-family: Arial; background: #121212; color: #fff; text-align: center; }
+    input, button { padding: 10px; margin-top: 20px; }
+    #weather { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Weather App</h1>
+  <input type="text" id="locationInput" placeholder="Enter location">
+  <button onclick="getWeather()">Get Weather</button>
+  <div id="weather"></div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById('locationInput').value;
+      const apiKey = 'https://www.here.com/platform/map-data?cid=Developer_Location-Services-Api-Google-YT-0-Dev-APAC-IN-matchtype=p&utm_source=Google&utm_medium=ppc&utm_campaign=Products_AlwaysOn&utm_term=location%20services%20api&gclsrc=aw.ds&gad_source=1&gad_campaignid=22291628153&gbraid=0AAAAACoWNnzUNlM4kQBJycXStmDRdPcPc&gclid=Cj0KCQjwnJfEBhCzARIsAIMtfKJMlULn93hRYQ21F0IDQbBv_MKdFdpWLwTSagXnLYdGoLygJpSEFEoaAnLUEALw_wcB'; // Use OpenWeatherMap API key
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.cod === 200) {
+          document.getElementById('weather').innerHTML = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <p>${data.weather[0].description}</p>
+            <p>Temperature: ${data.main.temp}°C</p>
+            <p>Humidity: ${data.main.humidity}%</p>
+            <p>Wind Speed: ${data.wind.speed} m/s</p>
+          `;
+        } else {
+          document.getElementById('weather').innerHTML = `<p>Location not found.</p>`;
+        }
+      } catch (error) {
+        document.getElementById('weather').innerHTML = `<p>Error fetching data.</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
